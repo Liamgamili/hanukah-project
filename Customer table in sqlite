@@ -1,0 +1,7 @@
+CREATE TABLE Customer(
+id INTEGER,
+fname TEXT,
+lname TEXT,
+adress TEXT,
+mobile INTEGER,
+)
