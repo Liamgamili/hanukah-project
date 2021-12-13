@@ -1,0 +1,86 @@
+import sqlite3
+from Customer import Customer
+from CustomerDataAccess import CustomerDataAccess
+
+
+def print_menu():
+    return f'1. Get all Customers \n2. Get Customer by id \n3. Insert Customer' +\
+           f' \n4. Delete Customer \n5. Update Customer \n6. Exit \nPlease enter your choose: '
+
+
+def get_customer():
+    id = int(input('Enter id: '))
+    Customer = dao.get_Customer_by_id(id)
+    if Customer is not None:
+        print(Customer)
+    else:
+        print(f'Customer with id: {id} does not exist\n ')
+
+
+def insert():
+    id = int(input('Enter id: '))
+    if dao.get_customer_by_id(id) is not None:
+        print('customer with the same id already exist')
+        return
+    fname = str(input('Enter first name: '))
+    lname = str(input('Enter last name: '))
+    if chek(fname, lname) != 'yes':
+        return
+    address = str(input('Enter address: '))
+    mobile = str(input('Enter mobile: '))
+    Customer = Customer(id, fname, lname, address, mobile)
+    dao.insert_Customer(Customer)
+    print('Records updated successfully')
+
+
+def delete():
+    id = int(input('Enter id: '))
+    if dao.getCustomerbyid(id) is not None:
+        dao.delete_Customer(id)
+        print('Records updated successfully')
+    else:
+        print(f'Customer with id: {id} does not exist')
+
+
+def chek(fname, lname):
+    if dao.get_customer_by_f_name_and_l_name(fname, lname) is not None:
+        return str(input('are you sure? '))
+    return 'yes'
+
+
+def update():
+    id = int(input('Enter the current id: '))
+    if dao.get_customer_by_id(id) is None:
+        print('customer with the specified id does not exist')
+        return
+    _id = int(input('Enter the new id:'))
+    if dao.get_customer_by_id(_id) is not None and _id != id:
+        print('customer with the same id already exist')
+        return
+    _f_name = str(input('Enter first name: '))
+    _l_name = str(input('Enter last name: '))
+    _address = str(input('Enter address: '))
+    _mobile = str(input('Enter mobile: '))
+    customer = Customer(_id, _f_name, _l_name, _address, _mobile)
+    dao.update_customer(id, customer)
+    print('Records updated successfully')
+
+
+
+
+
+def main():
+    num_choose = int(input(f'\n{print_menu()}'))
+    while num_choose != 6:
+        if 6 < num_choose or num_choose < 1:
+            num_choose = int(input(f'\nYour input is not correct \n{print_menu()}'))
+            continue
+        else:
+            action_selector(num_choose)
+        num_choose = int(input(f'\n{print_menu()}'))
+    print('Good bye!')
+
+
+dao = CustomerDataAccess('/Users/liamgamili/Desktop/jbproject.db')
+main()
+sqlite3.connect('/Users/liamgamili/Desktop/jbproject.db').close()
