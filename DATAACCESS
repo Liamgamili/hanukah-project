@@ -1,0 +1,46 @@
+import sqlite3
+from Customer import Customer
+
+class DataAccess:
+
+    def print_all_customers(cur):
+        cur.execute('SELECT * FROM Customer')
+        for row in cur:
+            print(Customer(row[0], row[1], row[2], row[3], row[4]))
+
+    def insert_customer(self, Customer):
+        if self.check_if_in(int(Customer.id)): return "ID already exists."
+        self.cur.execute(
+            f'INSERT INTO customer VALUES ({Customer.id}, "{Customer.fname}", "{Customer.lname}", "{Customer.address}", {Customer.mobile})')
+        return f'Customer {Customer.fname} {Customer.lname}'
+
+    def delete_customer(self, id):
+        if not self.check_if_in(int(id)): return "does't exist."
+        self.cur.execute(f"DELETE FROM customer WHERE id = {id}")
+        return f'Customer with the ID: {id} - DELETED.'
+
+    def get_all_customers(self):
+        self.cur.execute('SELECT*FROM Customer')
+        return [f'{row[1]} {row[2]}' for row in self.cur]
+
+    def get_customers_by_id(self, id):
+        if not self.check_if_in(int(id)):
+            return "does't exist."
+        else:
+            self.cur.execute(f'SELECT*FROM Customer WHERE id = {id}')
+            return [f'{row[0]} {row[1]} {row[2]} {row[3]} {row[4]}' for row in self.cur]
+
+    def update_customer(self, id, Customer):
+        self.cur.execute(f"UPDATE Customer SET id = {Customer.id} WHERE id = {id} ")
+        self.cur.execute(f"UPDATE Customer SET fname = '{Customer.fname}' WHERE id = {id} ")
+        self.cur.execute(f"UPDATE Customer SET lname = '{Customer.lname}' WHERE id = {id} ")
+        self.cur.execute(f"UPDATE Customer SET address = '{Customer.address}' WHERE id = {id} ")
+        self.cur.execute(f"UPDATE Customer SET mobile = {Customer.mobile} WHERE id = {id} ")
+        return f'Customer {Customer.fname} {Customer.lname} - UPDATED'
+
+
+    conn = sqlite3.connect('/Users/liamgamili/Desktop/jbproject.db')
+    cur = conn.cursor()
+    print_all_customers(cur)
+
+
